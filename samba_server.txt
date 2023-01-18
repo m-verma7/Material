@@ -1,0 +1,84 @@
+Samba_service:-
+           - To access Data and printers on windows systems this service helps
+           - SMB(Server Message Block)
+           - samba in Linux , in windows its CIFS
+           - uses NMB service and netbios name 
+           - port no 138,139 
+           - Packagename= samba, samba-client, samba-common
+           - Service name= smb and nmb
+           - Daemon name=smbd
+           - configuration file = /etc/samba/smb.conf 
+           
+
+Steps:-
+     1. install packages
+      #yum install -y samba samba-client samba-common
+
+     2. create dir and set permission
+      #mkdir /tmp/data
+      #chmod 777 /tmp/data
+
+     3. To check  SElinux context for /tmp/data
+      # ls -ldZ /tmp/data
+        To change it to samba_share_t
+      #chcon -t samba_share_t /tmp/data
+      # ls -ldZ /tmp/data 
+       to set owner and grpowner to nobody
+     #chown nobody:nobody /tmp/data
+
+     4. To share samba share with rw permission , we need turn on sebool 
+      #setsebool -P samba_export_all_rw 1
+
+     5. To write our share defination
+       #vi /etc/samba/smb.conf
+      Go to EOF
+        [mysamba]
+      	comment = My samba shared data
+	path = /tmp/data
+	writable = yes
+        browseable = yes
+       save and exit
+   6. testparm to validate smb.conf file
+      #testparm
+        enter to see report
+
+ 7. Add rules in firewall
+#firewall-cmd --permanent --add-service=samba
+#firewall-cmd --permanent --add-service=samba-client
+#firewall-cmd --reload
+
+ 8. Add user for samba
+]$ sudo smbpasswd -a user1
+New SMB password:
+Retype new SMB password:
+Added user user1.
+
+Start and enable service 
+#systemctl start smb.service 
+#systemctl start nmb.service 
+#systemctl enable smb.service 
+#systemctl enable nmb.service 
+
+9. On linux client
+[admin@client Desktop]$ $ sudo smbclient -L 192.168.233.138 -U user1
+to access samba share from linuxclient
+go to places> connect to server > smb://192.168.233.138
+    username and password 
+    sambashare dir is listed
+we can use this dir 
+
+
+10. on windows client
+win+r
+\\192.168.233.138
+username user1
+password
+and access sambashare dir 
+try to edit file
+create file 
+
+and check it from server also
+
+
+
+

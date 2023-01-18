@@ -1,0 +1,93 @@
+IP Add:- Logical Identity assigned to networking nodes.
+       - Internet Protocol
+       - Versions of IP
+          - IPV4
+          - IPV6
+
+IPV4:-
+     - 32 bits, arranged in 4 groups
+     - each group has 8 bits, hence called as octet, seprated by .
+     - written in dotted decimal format
+       e.g. 192.168.1.1
+     Devided in 5 classes
+
+
+A. IP address = network add + host address
+    Network address:- Most common in network 
+                    - starts from left side
+                    - shown as ON/1 bit
+
+
+    Network_bits:- bits used to define network address
+    Host_bits:-  bits used to define hosts address
+                - starts from right side
+                - OFF/0
+
+
+    Subnet_mask:- Networking bits are turned on/1
+                - match exact network address
+                
+
+192 >> 8 bits ??
+      - Binary ??
+  
+
+192 >> 11000000
+168 >> 10101000
+1   >> 00000001
+1   >> 00000001
+192       168       1       1           255.255.255.0
+11000000.10101000.00000001.00000001
+11111111.11111111.11111111.00000000
+
+w.x.y.z
+
+           7     6      5     4    3    2     1     0
+         128     64    32    16    8    4     2     1
+
+
+ 192.45.89.90/255.255.0.0
+11111111.11111111.00000000.00000000
+
+ * classes identified using only 1st octet , w octet
+ 
+  Class    Range      Network_Bits    Host_bits   Subnet_mask
+   
+   A       1-126          8            24          255.0.0.0  
+
+   B       128-191        16           16          255.255.0.0
+  
+   C       192-223        24           8           255.255.255.0
+
+   D       224-239        -            -          Reserve for multicasting
+ 
+   E       240-255        -            -          Reserve for R & D 
+
+
+** IP address of same network are allowed to communicate directly 
+** IP address of diffrent network/and classes are not communicating with each other without using routing details.
+
+
+
+Task:- IP Addresses Reservation 
+       What is public address ?
+       what is private address ?
+       what is DNS and how it works ?
+
+Set network of 2 systems with ip addresses
+    192.168.1.1
+    192.168.1.2
+
+Ping should give reply from both systems
+
+
+
+
+
+       
+
+
+
+
+
+

@@ -1,0 +1,121 @@
+SSH(Secure Shell):- 
+             - Data is encrypted instead of plain text (telnet)
+             - Uses port no 22
+             - package name is openssh-server (openssh-6.4p1-8.el7.x86_64)
+             - daemon/service name is sshd
+             - configuration file is /etc/ssh/sshd_config	
+
+LAB
+1. Nw connectivity test
+2. To set system name as client and server
+   client = 192.168.233.139
+   server = 192.168.233.138
+
+  To get system name
+$ hostnamectl
+
+To set systenm name
+$hostnamectl set-hostname name
+
+3. To see if package is installed
+$ rpm -qa openssh
+
+4. To see if service is active
+$systemctl status sshd
+
+5. To connect server from client
+[admin@client ~]$ ssh 192.168.233.138
+The authenticity of host '192.168.233.138 (192.168.233.138)' can't be established.
+ECDSA key fingerprint is 34:35:59:f2:a7:8b:d0:ad:fa:94:70:08:5d:ab:76:33.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.233.138' (ECDSA) to the list of known hosts.
+admin@192.168.233.138's password: 
+Last login: Mon Sep 12 19:13:02 2022 from 192.168.233.139
+[admin@server ~]$ 
+
+>> Server is accessible from client
+
+6. To connect using username
+  ssh username@ip_add
+
+e.g. to connect to server using ram user
+
+[admin@client ~]$ ssh ram@192.168.233.138
+ram@192.168.233.138's password: 
+Last login: Mon Sep 12 19:17:24 2022 from 192.168.233.138
+[ram@server ~]$ 
+
+
+7. To add firewall rule for ssh service using cli
+$ sudo firewall-cmd --permanent --add-service=ssh
+$ sudo firewall-cmd --reload
+
+8. Passwordless ssh communication
+   Public-private key pair 
+Public keys need to be saved on remote system
+private keys must be on same system
+
+To generate ppk
+$[admin@client ~]$ ssh-keygen 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/admin/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/admin/.ssh/id_rsa.
+Your public key has been saved in /home/admin/.ssh/id_rsa.pub.
+
+>>to transfer public key to remote system
+[admin@client ~]$ ssh-copy-id -i ~/.ssh/id_rsa.pub 192.168.233.138
+password for admin to install key 
+
+>>Now try to login and see if its asking for password
+[admin@client ~]$ ssh 192.168.233.138
+Last login: Mon Sep 12 19:15:04 2022 from 192.168.233.139
+
+
+>> to make ram also passwordless communication
+[admin@client ~]$ ssh-copy-id -i ~/.ssh/id_rsa.pub ram@192.168.233.138
+password for ram 
+
+[admin@client ~]$ ssh ram@192.168.233.138
+Last login: Mon Sep 12 19:34:25 2022
+
+DONE
+
+9. Root login using ssh
+$ ssh root@192.168.233.138
+root@192.168.233.138's password: 
+Last login: Mon Aug 29 20:30:47 2022
+[root@server ~]# exit
+
+
+10. To prevent root login using ssh
+Go to server (192.168.233.138) system.
+Login as root
+# vi /etc/ssh/sshd_config 
+{{ on line no 48 #PermitRootLogin yes make changes like below}}
+48 PermitRootLogin no
+save and exit
+Restart sshd service
+#systemctl restart sshd
+
+
+Go to client to verify
+[admin@client ~]$ ssh root@192.168.233.138
+root@192.168.233.138's password: 
+Permission denied, please try again.
+
+>> blocked access of root user via ssh
+
+_________________________________________________________________________
+Copy files to remote system
+FTP server
+Package management  
+Yum Server
+http server
+samba server
+scripting
+ 
+
+
+

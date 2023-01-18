@@ -1,0 +1,202 @@
+lvm(Logical Volume Manager)
+     - Add Multiple HD and use them as a single device
+     - Create partitions across disk   
+     - We can access partitions using simple names
+     - Extend and reduce partitions size without loosing data
+     
+
+1. Physical volume(pv):-  O.S. mark these HD to be used in LVM
+
+
+2. Volume Group(VG):- Add multiple HD to form single Unit
+                    
+
+3. Logical Volume(LV):- Volume to store data
+                      - Volumes can be extended and reduced as per requirement
+             
+
+4. Format volume
+
+5. Mount volume on Directory
+
+
+
+============================================================
+1. Add 2 HD
+2. To create partitions in /dev/sdb
+# fdisk /dev/sdb
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): 
+Using default response p
+Partition number (1-4, default 1): 
+First sector (2048-20971519, default 2048): 
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-20971519, default 20971519): 
+Using default value 20971519
+Partition 1 of type Linux and of size 10 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+
+** Repeat step-2 for /dev/sdc **
+
+Step-3: To create PV
+# pvcreate /dev/sdb1 
+# pvcreate /dev/sdc1 
+
+To verify creation of Pv
+# pvdisplay
+
+Step-4: To create VG with name linux and using pv's /dev/sdb1 and /dev/sdc1
+# vgcreate linux /dev/sdb1 /dev/sdc1
+  Volume group "linux" successfully created
+
+To verify 
+# vgdisplay
+# vgdisplay linux
+
+Step-5: To create LV of name part1 and size of 1G in VG linux
+# lvcreate -n part1 -L 1G linux
+
+To verify
+# lvdisplay /dev/linux/part1
+
+Step-6: To format our Lv with ext4 filesystem
+# mkfs.ext4 /dev/linux/part1 
+
+
+Step-7: to mount lv
+# mkdir /part1
+# ls /part1
+# mount /dev/linux/part1 /part1
+# ls /part1
+
+Step-8: Create some data in new LV
+#cp /home/admin/Desktop/* /part1
+#cp -r /tmp/e* /part1/
+#ls /part1/
+# du -sh /part1/
+>> 83M	/part1/
+
+
+===================================================================
+To extend LV(part1)
+
+Stop using lv i.e. unmount part1
+#df -h
+# umount /dev/linux/part1
+# df -h
+
+to extend part1 by 1Gb
+# lvextend -L +1G /dev/linux/part1
+  Extending logical volume part1 to 2.00 GiB
+  Logical volume part1 successfully resized
+
+Now Part1 is of 2GB
+** If we mount it again will show only 1Gb 
+   extra 1GB is not identified by O.S. as its not have any File-system
+** To add filesystem >> if we format data loss 
+                     >> not formating then extra space is of no use
+
+** To avoid both of this above options, we can extend filesystem
+
+To extend filesystem
+
+To check filesystem of part1
+# e2fsck -f /dev/linux/part1
+
+To resize filesystem
+#resize2fs /dev/linux/part1
+
+Mount Partition and check size 
+#mount /dev/linux/part1 /part1
+#df -h
+
+Check data if its there
+#ls /part1
+#du -sh /part1
+
+=======================================================================
+Reducing Part1 to 700MB from 2Gb
+
+Steps >> A. umount partition
+         B. reduce filesystem first
+         C. lvdisplay to see lv size
+         D. reduce partition size
+         E. Mount and check
+
+A.
+#umount /dev/linux/part1
+
+B. #e2fsck -f /dev/linux/part1
+   # resize2fs /dev/linux/part1 700M
+    >> size we need to mention; how much to keep
+C.  #lvdisplay /dev/linux/part1
+
+D. # lvreduce -L -1348M /dev/linux/part1  (>> -L is size to reduce)
+WARNING: Reducing active logical volume to 700.00 MiB
+  THIS MAY DESTROY YOUR DATA (filesystem etc.)
+Do you really want to reduce part1? [y/n]: y
+  Reducing logical volume part1 to 700.00 MiB
+  Logical volume part1 successfully resized
+
+
+E.
+# mount /dev/linux/part1 /part1
+# df -h
+# ls /part1
+# du -sh /part1/
+
+>> data is intact
+
+============================================================
+Delete LVM
+
+A. umount and delete LV
+B. Delete vg
+C. delete Pv
+
+A.
+# umount /dev/linux/part1
+# df -h
+# lvremove /dev/linux/part1
+Do you really want to remove active logical volume part1? [y/n]: y
+  Logical volume "part1" successfully removed
+
+B.
+# vgremove linux
+Do you really want to remove volume group "linux" containing 1 logical volumes? [y/n]: y
+Do you really want to remove active logical volume part2? [y/n]: y
+  Logical volume "part2" successfully removed
+  Volume group "linux" successfully removed
+
+
+
+C. # pvremove /dev/sdb1 /dev/sdc1
+  Labels on physical volume "/dev/sdb1" successfully wiped
+  Labels on physical volume "/dev/sdc1" successfully wiped
+  # pvdisplay 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   

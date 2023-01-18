@@ -1,0 +1,52 @@
+Web server:- System which hosts web-site is acalled as web-server
+Web-site is collection of web-pages
+Package name = httpd (apache server)
+Daemon name = httpd
+Port no=80 ,8080
+Working directory= /var/www/html
+
+Step-1: install httpd package
+#yum install httpd
+y
+
+>> create /var/ftp/www/html directory
+
+Step-2: Start and enable service
+# systemctl status httpd
+# systemctl start httpd
+# systemctl enable httpd
+# systemctl status httpd
+
+Step-3: Add firewall rules
+# firewall-cmd --permanent --add-service=http
+# firewall-cmd --reload
+
+Step-4:- verify if test page is loaded
+Open browser
+url>> 192.168.233.138 (IP_add server)
+Test page of apache must be loaded
+
+Step-5 to add our web page
+#cd /var/ftp/www/html
+#vi index.html
+<html>
+<title> Welcome </title>
+<h1> Linux web server </h1>
+<body bgcolor="pink">
+<font color="blue"> <marquee>Hello World !!! Welcome to Our Linux Server</marqu$
+</body>
+</html>
+save and exit
+
+Refresh browser
+New page must be loaded
+
+To access web-page using name
+#vi /etc/hosts
+go to EOF
+192.168.233.138 www.welcome.net
+save and exit
+
+GO to browser 
+www.welcome.net
+

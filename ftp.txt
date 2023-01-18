@@ -1,0 +1,127 @@
+Copying files between systems using nw:-
+
+1. SCP (secure copy)- usage ssh to cpy files
+ 
+To copy ssh.txt to remote system
+#scp ssh.txt 192.168.233.139:/tmp
+
+to copy directory with its contents
+
+#scp -r mydir 192.168.233.139:/home/admin/Desktop/
+
+** for simple changes also scp tranfers entire file; causing congestion of nw in peek time **
+
+2. rsync:- Remote syncronization
+         - Only changes or updates will be send to remote system
+
+$ rsync -av testdir 192.168.233.138:/home/admin/Desktop/
+sending incremental file list
+testdir/
+testdir/adt1.txt
+testdir/impfile.txt
+testdir/newfile.txt
+testdir/practice.txt
+testdir/t1.txt
+
+
+now make changes in newfile.txt and execute same command again
+[admin@client Desktop]$ rsync -av testdir 192.168.233.138:/home/admin/Desktop/
+sending incremental file list
+testdir/
+testdir/newfile.txt
+testdir/newfile.txt~
+
+>> transfering only newfile not other file's are transferred.
+
+==========================================================================
+
+FTP(File Transfer Protocol):-
+   - Upload and download files
+   - TCp service uses port no 20,21
+   - package name vsftpd
+   - daemon name vsftpd
+   - configfuration file /etc/vsftpd.conf
+
+
+to qery if package in installed
+rpm >> redhat package manager
+  q= query
+  a= all
+
+#rpm -qa vsftpd
+# rpm -qa vsftpd8
+
+>>if ftp package is installed ; it creates dir in /var/ftp
+[root@server ~]# ls /var 
+its not 
+
+** ftp is not installed
+
+>> To install ftp service
+1. Access DVD
+#cd /run/media/admin/RHEL-7.0\ Server.x86_64/
+
+To grep vsftp package
+#ls Packages | grep vsftpd
+vsftpd-3.0.2-9.el7.x86_64.rpm
+
+To install vsftpd package
+Using RPM
+  - we must be in location of Package
+  - Complete package name is required
+ 
+To get inside dvd and package location
+[root@server Packages]# cd /run/media/admin/RHEL-7.0 Server.x86_64/Packages
+
+To install vsftpd package
+# rpm -ivh vsftpd-3.0.2-9.el7.x86_64.rpm 
+
+To start ftp service
+#systemctl start vsftpd
+#systemctl status vsftpd
+
+Put some files in /var/ftp
+#cd /var/ftp/pub
+#cp /home/admin/Desktop/testdir/* .
+
+To verify if ftp is working 
+Open Firefox browser
+put url as
+ftp://192.168.233.138
+browse through pub and try to open and download file.
+
+i.e. locally ftp service is working
+
+TO verify from client(remote system)
+Go to client
+Open Firefox browser
+put url as
+ftp://192.168.233.138
+
+>> will not connect as no firewall rules are added
+
+================================================================
+To add firewall rule on server
+# firewall-cmd --permanent --add-service=ftp
+# firewall-cmd --reload
+================================================================
+
+
+Go to client
+Open Firefox browser
+put url as
+ftp://192.168.233.138
+browse through pub and try to open and download file.
+
+================================================================
+to see kernel level firewall selinux booleans
+#getsebool -a
+
+to list booleans of ftp
+#getsebool -a | grep ftp
+
+To enable boolean for ftp  permanently
+# setsebool -P ftpd_full_access on
+=================================================================
+Task: How to download file using cli ??
+

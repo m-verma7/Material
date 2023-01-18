@@ -1,0 +1,83 @@
+What is Network ??
+>> Connecting 2 or more things to each  other
+  
+
+Usage / Why Network ??
+- Share data/ services
+- Resource sharing
+- Manage multiple device 
+- E-commerce
+- Communication
+
+Types of Network ?
+>> how much area is covered
+PAN
+LAN
+CAN
+MAN
+WAN
+
+
+Requirements to set up network ??
+Hardware:-
+    1. LAN card/NIC/Ethernet (as per media selection)
+    2. Cables/Connectors
+    3. Internetworking Device 
+
+
+Software:
+   1. O.S. :- Device drivers always O.S. Specific
+   2. File and print permission
+   3. Protocol
+ 
+   
+How to setup Network ??
+Access each device
+Enable file/print service
+Define and access Protocol
+
+What is Protocol?
+ >> Set of rules and regulations
+   IP (Internet protocol)
+   DNS (Domain name service/system)
+   DHCP (Dynamic Host Configuration Protocol)
+   SNMP (Simple Network Management Protocol)
+   SMTP (Simple Mail transfer protocol)
+   IMAP
+   POP
+   FTP
+   NFS
+   SAMBA  etc..
+ 
+ 
+Understanding how network works 
+   Conceptual Model of ISO/OSI layer
+   - To work on all networking device exactly same way
+   - 
+7 Layers
+
+
+7. Application(data)
+6. Presentation(data)
+5. Session(data)
+4. Transmission(Segments)
+
+3. Network(Packets):- Logical Addressing, Packets, Routing and packet 		      exchange, NW controller
+
+2. DLL(frames):- Synchronization, ECC, Physical addressing,Framing
+      Physical Address:-  Permanent Address of any LAN card
+                         - MAC (media Access Control) add
+                         - World wide unique
+                         - manufacturers assign it
+                         - 48 bits written in hexadecimal no. system
+
+
+             
+1. Physical(bit):- Making/breaking connections, defining data rate, voltage sp
+              encoding and decoding as per media selection
+
+
+
+==========================================================================
+
+IP Addressing

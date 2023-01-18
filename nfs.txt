@@ -1,0 +1,149 @@
+
+SSH
+
+NFS:- Network File Service
+    - used to share files
+    - also needs rpc-bind and mountd to work with nfs
+
+    
+
+
+Control services
+
+systemctl status service_name
+systemctl start service_name
+systemctl stop service_name
+systemctl restart service_name
+systemctl enable service_name
+systemctl disable service_name
+
+
+==============================================================================
+LAB
+server=192.168.1.1
+client=192.168.1.2
+
+On server
+Create /tmp/data
+$mkdir /tmp/data
+$touch /tmp/data/t1.txt
+
+To set permission
+$chmod -R 777 /tmp/data
+
+To check nfs service status
+$systemctl status nfs
+
+To start service
+$sudo systemctl start nfs
+
+To share /tmp/data with world we must put entry in /etc/exports
+$sudo vi /etc/exports
+/tmp/data *(rw,sync)
+save and exit
+
+To restart nfs
+$sudo systemctl restart nfs
+
+To add rules in firewall, to allow traffic from client
+GUI method
+Application>sundry>firewall
+    configuration:permanent
+     from services check for
+                         nfs
+                         mountd
+                         rpc-bind
+  options> reload firewall
+
+To check What files/dir are being exported by this system
+$sudo exportfs
+>> must show entries from exportfs file
+
+On Client system
+
+$ping 192.168.1.1
+
+$showmount -e 192.168.1.1
+>> showing export list from server
+
+To access them we need to mount
+$cd Desktop 
+$mkdir nfsdata
+
+to mount /tmp/data which is on server to nfsdata
+$sudo mount 192.168.1.1:/tmp/data nfsdata
+
+Using mouse open nfsdata directory
+try to access and make changes in t1.txt
+
+create t2.txt
+
+Go to server
+verify if changes made by client are there 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+

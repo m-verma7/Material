@@ -1,0 +1,117 @@
+Package Management:- 
+A.Redhat Package Manager(RPM):-
+        To know if package is installed 
+#rpm -qa package_name
+
+To install 
+1. Complete package name is required
+2. We must be in location of package
+3. Can't resolve dependancies 
+
+#cd /run/media/admin/RHEL-7.0 Server.x86_64/Packages
+#rpm -ivh Package_name
+
+** to install httpd(Web-service)
+#rpm -ivh httpd-2.4.6-17.el7.x86_64.rpm
+error: Failed dependencies:
+	/etc/mime.types is needed by httpd-2.4.6-17.el7.x86_64
+	httpd-tools = 2.4.6-17.el7 is needed by httpd-2.4.6-17.el7.x86_64
+	libapr-1.so.0()(64bit) is needed by httpd-2.4.6-17.el7.x86_64
+	libaprutil-1.so.0()(64bit) is needed by httpd-2.4.6-17.el7.x86_64
+
+>> Dependancies :- are packages or library files without which main package (httpd) is not installed.
+
+
+B. YUM(YellowDog Update modifier):-
+   - Manage packages in redhat based O.S.
+   - Create's repos of available packages and DB list of dependant packages
+   - Resolve 's Dependancies automatically
+   - From anywhere in system we can manage package
+   - Do not require complete package name
+   
+To configure YUM server
+Go to server system (192.168.233.138)
+Steps-1:- Install and configure ftp service
+#cd /run/media/admin/RHEL-7.0 Server.x86_64/Packages
+#rpm -ivh vsftpd-3.0.2-9.el7.x86_64.rpm
+
+Start and enable ftp service
+#systemctl start vsftpd
+#systemctl enable vsftpd
+#systemctl status vsftpd
+
+Add firewall rule
+#firewall-cmd --permanent --add-service=ftp
+#firewall-cmd --reload
+
+Copy PAckages directory from dvd to /var/ftp/pub
+#cd ..
+#cp -avr Packages /var/ftp/pub
+
+Verify if ftp is working properly by using web-browser
+
+Step-2:-To configure yum server
+To create repo of /var/ftp/pub/Packages
+# createrepo /var/ftp/pub/Packages
+After finishing
+
+to write configuration file for yum
+# cd /etc/yum.repos.d/
+# vi server.repo
+[server]
+name= yum server
+baseurl=ftp://192.168.233.138/pub/Packages/
+enabled=1
+gpgcheck=0
+save and exit
+
+To verify if everything is working properly
+#yum clean all
+#yum update
+server                                                   | 2.9 kB     00:00     
+server/primary_db                                          | 3.4 MB   00:00 
+
+i.e. yum server is successfully configured and ready to use
+
+Step-3: Using yum server 
+to get package details
+#yum info httpd
+
+To install httpd package
+# yum install httpd
+y to install
+
+
+Step-4:- To configure yum client
+On Client system (192.168.233.139)
+verify using browser if ftp is accessible
+login as root
+#vi  /etc/yum.repos.d/client.repo
+[client]
+name= yum server
+baseurl=ftp://192.168.233.138/pub/Packages/
+enabled=1
+gpgcheck=0
+save and exit
+
+# yum clean all
+# yum update
+
+To install tigervnc-server
+#yum install tigervnc-server
+y to install
+
+#yum install virt-viewer
+
+To remove package using yum
+# yum remove tigervnc-server
+y
+
+
+
+
+
+
+
+
+
